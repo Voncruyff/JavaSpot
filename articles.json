@@ -1,0 +1,47 @@
+[
+  {
+    "id": "1",
+    "title": "Panduan Lengkap Menikmati Sunrise Eksotis di Candi Borobudur",
+    "content": "Menyaksikan matahari terbit di atas Candi Borobudur adalah salah satu pengalaman spiritual dan visual paling menakjubkan di Pulau Jawa. Kabut pagi yang menyelimuti lembah Kedu, dikelilingi oleh Gunung Merapi, Merbabu, Sumbing, dan Sindoro, menciptakan siluet mistis stupa-stupa Borobudur yang megah.\n\nUntuk mendapatkan pemandangan terbaik, disarankan untuk masuk melalui rute khusus fajar atau menginap di hotel dekat kawasan candi. Datanglah sekitar pukul 4:30 pagi agar mendapatkan posisi duduk terbaik menghadap timur.\n\nJangan lupa untuk membawa senter kecil karena tangga candi masih gelap di waktu fajar, gunakan jaket karena udara subuh cukup dingin, dan pastikan kamera Anda siap merekam momen magis ini.",
+    "imageUrl": "https://images.unsplash.com/photo-1584810359583-96fc3448beaa?auto=format&fit=crop&w=800&q=80",
+    "author": "Siti Rahmawati",
+    "createdAt": "2026-06-25T08:30:00Z",
+    "readTime": "5 Menit Baca",
+    "tags": [
+      "Candi",
+      "Sunrise",
+      "Jawa Tengah",
+      "Tips Wisata"
+    ]
+  },
+  {
+    "id": "2",
+    "title": "Pesona Laut Pasir Gunung Bromo: Petualangan ke Kawah Vulkanik Aktif",
+    "content": "Taman Nasional Bromo Tengger Semeru menawarkan keindahan lanskap vulkanis yang tiada duanya di dunia. Dengan berkendara menggunakan Jeep 4x4, Anda akan menuruni tebing kaldera curam menuju lautan pasir seluas 10 kilometer persegi yang sunyi namun memukau.\n\nMenjelajahi kawah aktif Bromo membutuhkan fisik yang bugar karena Anda harus mendaki tangga beton setinggi lebih dari 250 anak tangga. Bau belerang yang pekat sesekali terhembus angin fajar, mengingatkan kita akan kekuatan alam bumi yang dahsyat.\n\nTips paling penting saat mendaki kawah adalah menggunakan masker penutup debu pasir dan kacamata pelindung. Anda juga bisa menyewa jasa kuda Tengger untuk mengantar Anda dari kaki kaldera menuju bawah tangga kawah.",
+    "imageUrl": "https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=800&q=80",
+    "author": "Dwi Saputra",
+    "createdAt": "2026-06-24T10:15:00Z",
+    "readTime": "4 Menit Baca",
+    "tags": [
+      "Gunung",
+      "Petualangan",
+      "Jawa Timur",
+      "Kawah"
+    ]
+  },
+  {
+    "id": "3",
+    "title": "Eksplorasi Kuliner Malam Legendaris di Sekitar Jalan Malioboro Yogyakarta",
+    "content": "Yogyakarta adalah surga bagi para pecinta kuliner tradisional manis dan gurih. Begitu senja mulai turun, trotoar Jalan Malioboro yang rindang seketika berubah menjadi jajaran warung lesehan dengan tikar tradisional yang hangat.\n\nDari sekian banyak menu kuliner, Anda wajib mencicipi Sate Kere (sate gembus sapi dengan bumbu kacang pedas manis), Gudeg Wijilan legendaris yang manis gurih berteman areh kental, serta menikmati hangatnya Kopi Joss yang disajikan dengan arang membara langsung di dalam gelas Anda.\n\nJangan lupa pula mengunjungi Pasar Beringharjo di siang hari untuk berburu pecel sayuran segar bertabur siraman bumbu kacang pekat khas kraton dengan harga yang sangat bersahabat.",
+    "imageUrl": "https://images.unsplash.com/photo-1571731956686-34372ed41b0c?auto=format&fit=crop&w=800&q=80",
+    "author": "Agung Laksono",
+    "createdAt": "2026-06-23T14:45:00Z",
+    "readTime": "6 Menit Baca",
+    "tags": [
+      "Kuliner",
+      "Yogyakarta",
+      "Malioboro",
+      "Lesehan"
+    ]
+  }
+]

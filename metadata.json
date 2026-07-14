@@ -1,0 +1,6 @@
+{
+  "name": "JavaSpot",
+  "description": "Platform portal interaktif yang menyajikan destinasi wisata terbaik di Pulau Jawa dengan portal admin untuk manajemen data.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
