@@ -607,31 +607,40 @@ export default function AdminDashboard() {
                       </div>
                     ) : (
                       logs.map((log) => {
-                        const date =
-                          new Date(
-                            log.created_at,
-                          );
+                        const date = new Date(log.created_at);
 
-                        const dateText =
-                          Number.isNaN(
-                            date.getTime(),
-                          )
-                            ? '-'
-                            : `${date.getDate()}/${
-                                date.getMonth() +
-                                1
-                              }/${date.getFullYear()}`;
+                        const dateText = Number.isNaN(date.getTime())
+                          ? '-'
+                          : `${date.getDate()}/${
+                              date.getMonth() + 1
+                            }/${date.getFullYear()}`;
+
+                        const adminName =
+                          log.admin_name || 'Admin';
 
                         return (
                           <div
                             key={log.id}
-                            className="text-[13px] text-[#3d6553] font-medium leading-snug"
+                            className="min-w-0 overflow-hidden"
                           >
-                            {log.admin_name ||
-                              'Admin'}{' '}
-                            - {log.action}
+                            <div className="flex min-w-0 items-center text-[13px] font-medium text-[#3d6553]">
+                              <span className="shrink-0 font-semibold">
+                                {adminName}
+                              </span>
 
-                            <span className="text-[10px] text-gray-400 block mt-0.5">
+                              <span className="mx-1 shrink-0">
+                                -
+                              </span>
+
+                              <span
+                                className="min-w-0 flex-1 truncate"
+                                title={log.action}
+                              >
+                                {log.action}
+                              </span>
+                            </div>
+
+                            <span className="mt-0.5 block text-[10px] text-gray-400">
                               {dateText}
                             </span>
                           </div>
