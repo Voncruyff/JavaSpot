@@ -190,11 +190,8 @@ export default function AdminDashboard() {
                 100,
             );
 
-      const dash =
-        `${percentage} 100`;
-
-      const offset =
-        `-${currentOffset}`;
+      const dash = `${percentage} 100`;
+      const offset = `-${currentOffset}`;
 
       currentOffset += percentage;
 
@@ -273,13 +270,34 @@ export default function AdminDashboard() {
             100,
         );
 
+  /*
+   * Mengurutkan artikel berdasarkan jumlah viewer
+   * terbesar dan hanya mengambil maksimal 10 artikel.
+   */
   const topArticles = [...articles]
     .sort(
       (first, second) =>
         Number(second.views ?? 0) -
         Number(first.views ?? 0),
     )
-    .slice(0, 4);
+    .slice(0, 10);
+
+  /*
+   * Warna balok untuk 10 artikel teratas.
+   * Warna dipilih berdasarkan urutan/peringkat artikel.
+   */
+  const articleBarColors = [
+    '#16a34a',
+    '#2563eb',
+    '#f59e0b',
+    '#ea580c',
+    '#8b5cf6',
+    '#ec4899',
+    '#14b8a6',
+    '#dc2626',
+    '#0891b2',
+    '#64748b',
+  ];
 
   const maxViews = Math.max(
     ...topArticles.map((article) =>
@@ -418,24 +436,27 @@ export default function AdminDashboard() {
                       <div className="flex flex-col gap-1 text-[11px] font-bold text-[#2c5340] tracking-wide border-l-2 border-gray-100 pl-4 py-1">
                         <span className="flex items-center gap-2">
                           <span className="w-1.5 h-1.5 rounded-full bg-[#2c5340]" />
-                          {articlesToday} Hari
-                          ini
+
+                          {articlesToday} Hari ini
                         </span>
 
                         <span className="flex items-center gap-2">
                           <span className="w-1.5 h-1.5 rounded-full bg-[#3d6553]" />
+
                           {articlesThisWeek}{' '}
                           Minggu ini
                         </span>
 
                         <span className="flex items-center gap-2">
                           <span className="w-1.5 h-1.5 rounded-full bg-[#497761]" />
+
                           {articlesThisMonth}{' '}
                           Bulan ini
                         </span>
 
                         <span className="flex items-center gap-2">
                           <span className="w-1.5 h-1.5 rounded-full bg-[#6a8b7a]" />
+
                           {articlesThisYear}{' '}
                           Tahun ini
                         </span>
@@ -469,7 +490,7 @@ export default function AdminDashboard() {
                     VIEWER OF ARTIKEL
                   </h4>
 
-                  <div className="space-y-6">
+                  <div className="space-y-5">
                     {topArticles.length ===
                     0 ? (
                       <div className="text-center text-gray-500 text-sm py-4">
@@ -479,7 +500,10 @@ export default function AdminDashboard() {
                       </div>
                     ) : (
                       topArticles.map(
-                        (article) => {
+                        (
+                          article,
+                          index,
+                        ) => {
                           const views =
                             Number(
                               article.views ??
@@ -496,28 +520,66 @@ export default function AdminDashboard() {
                               ),
                             );
 
+                          const barColor =
+                            articleBarColors[
+                              index %
+                                articleBarColors.length
+                            ];
+
                           return (
                             <div
                               key={
                                 article.id
                               }
                             >
-                              <div className="text-[11px] font-medium text-gray-800 mb-1 truncate">
-                                {article.title}{' '}
-                                -{' '}
-                                {article.author ||
-                                  'JavaSpot'}
+                              {/* Nama penulis - Judul artikel */}
+                              <div className="mb-1 flex min-w-0 items-center gap-1 text-[11px] font-medium">
+                                <span
+                                  className="max-w-[35%] shrink-0 truncate font-bold text-[#16a34a]"
+                                  title={
+                                    article.author ||
+                                    'JavaSpot'
+                                  }
+                                >
+                                  {article.author ||
+                                    'JavaSpot'}
+                                </span>
+
+                                <span className="shrink-0 text-gray-400">
+                                  -
+                                </span>
+
+                                <span
+                                  className="truncate text-gray-800"
+                                  title={
+                                    article.title
+                                  }
+                                >
+                                  {
+                                    article.title
+                                  }
+                                </span>
                               </div>
 
                               <div className="flex items-center gap-3">
-                                <div
-                                  className="h-9 bg-[#3d6553] rounded-r-sm transition-all duration-1000"
-                                  style={{
-                                    width: `${widthPct}%`,
-                                  }}
-                                />
+                                <div className="h-9 flex-1 overflow-hidden rounded-md bg-gray-100">
+                                  <div
+                                    className="h-full rounded-md shadow-sm transition-all duration-1000"
+                                    style={{
+                                      width: `${widthPct}%`,
+                                      backgroundColor:
+                                        barColor,
+                                    }}
+                                  />
+                                </div>
 
-                                <span className="text-xs font-bold text-[#2c5340]">
+                                <span
+                                  className="w-10 shrink-0 text-right text-xs font-bold"
+                                  style={{
+                                    color:
+                                      barColor,
+                                  }}
+                                >
                                   {views}
                                 </span>
                               </div>
