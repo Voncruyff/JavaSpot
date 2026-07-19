@@ -112,7 +112,7 @@ export default function Home() {
           })
           .limit(4),
 
-        getTrendingDestinations(4),
+        getTrendingDestinations(10),
       ]);
 
       if (destinationResult.error) {

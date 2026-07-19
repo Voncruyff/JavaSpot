@@ -36,6 +36,87 @@ interface ArtikelPopupProps {
   onClose: () => void;
 }
 
+/**
+ * Membersihkan format HTML yang berasal dari editor artikel.
+ *
+ * Perbaikan yang dilakukan:
+ * - Mengubah &nbsp; menjadi spasi biasa.
+ * - Menghapus tab.
+ * - Merapikan spasi berlebihan.
+ * - Mengubah <br> di dalam paragraf menjadi spasi.
+ */
+const normalizeArticleHtml = (
+  html: string,
+): string => {
+  if (
+    typeof window === 'undefined' ||
+    !html
+  ) {
+    return html;
+  }
+
+  const parser = new DOMParser();
+
+  const parsedDocument =
+    parser.parseFromString(
+      html,
+      'text/html',
+    );
+
+  /*
+   * Mengganti <br> di dalam paragraf dengan spasi.
+   * Ini mencegah baris artikel terlalu pendek
+   * ketika menggunakan rata kanan-kiri.
+   */
+  parsedDocument
+    .querySelectorAll('p br')
+    .forEach((lineBreak) => {
+      lineBreak.replaceWith(
+        parsedDocument.createTextNode(' '),
+      );
+    });
+
+  /*
+   * Mengambil seluruh node teks untuk
+   * membersihkan whitespace.
+   */
+  const walker =
+    parsedDocument.createTreeWalker(
+      parsedDocument.body,
+      NodeFilter.SHOW_TEXT,
+    );
+
+  const textNodes: Text[] = [];
+
+  while (walker.nextNode()) {
+    textNodes.push(
+      walker.currentNode as Text,
+    );
+  }
+
+  textNodes.forEach((textNode) => {
+    textNode.data = textNode.data
+      .replace(/\u00a0/g, ' ')
+      .replace(/\t/g, ' ')
+      .replace(/[ ]{2,}/g, ' ');
+  });
+
+  return parsedDocument.body.innerHTML;
+};
+
+/**
+ * Membersihkan paragraf teks biasa.
+ */
+const normalizePlainParagraph = (
+  text: string,
+): string => {
+  return text
+    .replace(/\u00a0/g, ' ')
+    .replace(/\t/g, ' ')
+    .replace(/[ ]{2,}/g, ' ')
+    .trim();
+};
+
 export default function ArtikelPopup({
   article,
   onClose,
@@ -45,16 +126,17 @@ export default function ArtikelPopup({
 
   /*
    * Menyimpan ID artikel yang sudah dihitung.
-   * Ini mencegah render ulang menambahkan viewer
-   * lebih dari satu kali selama popup masih terbuka.
+   * Hal ini mencegah render ulang menambahkan
+   * viewer lebih dari satu kali selama popup
+   * masih terbuka.
    */
   const countedArticleIdRef =
     useRef<string | null>(null);
 
   /*
-   * Menyimpan ID artikel yang sedang aktif agar
-   * hasil request artikel lama tidak mengubah
-   * jumlah viewer artikel baru.
+   * Menyimpan ID artikel yang sedang aktif.
+   * Hasil request artikel lama tidak akan
+   * mengubah jumlah viewer artikel baru.
    */
   const activeArticleIdRef =
     useRef<string | null>(null);
@@ -64,6 +146,7 @@ export default function ArtikelPopup({
       countedArticleIdRef.current = null;
       activeArticleIdRef.current = null;
       setCurrentViews(0);
+
       return;
     }
 
@@ -76,9 +159,9 @@ export default function ArtikelPopup({
     );
 
     /*
-     * Jangan mencatat ulang jika artikel yang sama
-     * masih terbuka dan komponen hanya melakukan
-     * render ulang.
+     * Jangan mencatat ulang jika artikel yang
+     * sama masih terbuka dan komponen hanya
+     * melakukan render ulang.
      */
     if (
       countedArticleIdRef.current ===
@@ -99,8 +182,8 @@ export default function ArtikelPopup({
             );
 
           /*
-           * Perbarui tampilan hanya jika artikel
-           * tersebut masih menjadi artikel aktif.
+           * Perbarui jumlah viewer hanya jika
+           * artikel tersebut masih aktif.
            */
           if (
             activeArticleIdRef.current ===
@@ -115,8 +198,8 @@ export default function ArtikelPopup({
           );
 
           /*
-           * Izinkan percobaan ulang apabila
-           * pencatatan viewer gagal.
+           * Izinkan pencatatan ulang jika
+           * penambahan viewer gagal.
            */
           if (
             activeArticleIdRef.current ===
@@ -132,8 +215,8 @@ export default function ArtikelPopup({
   }, [article?.id, article?.views]);
 
   /*
-   * Menutup popup dengan tombol Escape dan
-   * mencegah halaman belakang ikut scroll.
+   * Menutup popup menggunakan tombol Escape
+   * dan mencegah halaman belakang ikut scroll.
    */
   useEffect(() => {
     if (!article) {
@@ -220,6 +303,13 @@ export default function ArtikelPopup({
     /<\/?[a-z][\s\S]*>/i.test(
       articleContent,
     );
+
+  const cleanedHtmlContent =
+    containsHtml
+      ? normalizeArticleHtml(
+          articleContent,
+        )
+      : '';
 
   const handleOverlayClick = (
     event: React.MouseEvent<HTMLDivElement>,
@@ -327,29 +417,51 @@ export default function ArtikelPopup({
               </div>
             ) : containsHtml ? (
               <div
-                className="prose prose-lg prose-neutral max-w-none prose-headings:font-display prose-headings:font-bold prose-a:text-[#2c5340] hover:prose-a:text-[#1e3c2e] prose-img:rounded-2xl prose-img:shadow-sm leading-relaxed text-neutral-800 text-justify break-words"
+                className="
+                  article-content
+                  prose
+                  prose-lg
+                  prose-neutral
+                  max-w-none
+                  text-neutral-800
+                  leading-relaxed
+                  break-words
+                  prose-headings:font-display
+                  prose-headings:font-bold
+                  prose-headings:text-left
+                  prose-a:text-[#2c5340]
+                  hover:prose-a:text-[#1e3c2e]
+                  prose-img:rounded-2xl
+                  prose-img:shadow-sm
+                "
                 dangerouslySetInnerHTML={{
-                  __html: articleContent,
+                  __html:
+                    cleanedHtmlContent,
                 }}
               />
             ) : (
-              <div className="prose prose-lg max-w-none text-neutral-800 leading-relaxed space-y-6 text-justify break-words">
+              <div className="article-content prose prose-lg prose-neutral max-w-none text-neutral-800 leading-relaxed space-y-6 break-words">
                 {articleContent
-                  .split('\n')
+                  .split(/\n+/)
                   .map(
                     (
                       paragraph,
                       index,
                     ) => {
+                      const cleanedParagraph =
+                        normalizePlainParagraph(
+                          paragraph,
+                        );
+
                       if (
-                        !paragraph.trim()
+                        !cleanedParagraph
                       ) {
                         return null;
                       }
 
                       return (
                         <p key={index}>
-                          {paragraph}
+                          {cleanedParagraph}
                         </p>
                       );
                     },
@@ -358,6 +470,88 @@ export default function ArtikelPopup({
             )}
           </div>
         </div>
+
+        <style>{`
+          /*
+           * Teks rata kiri untuk layar kecil.
+           * Tampilan ini lebih nyaman dibaca
+           * dan tidak menimbulkan renggang besar.
+           */
+          .article-content p {
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            text-align: left;
+            text-align-last: left;
+            white-space: normal;
+            word-spacing: normal;
+            overflow-wrap: break-word;
+          }
+
+          /*
+           * Rata kanan-kiri hanya digunakan
+           * pada layar tablet dan desktop.
+           */
+          @media (min-width: 768px) {
+            .article-content p {
+              text-align: justify;
+              text-align-last: left;
+            }
+          }
+
+          /*
+           * Judul tidak ikut dibuat rata
+           * kanan-kiri.
+           */
+          .article-content h1,
+          .article-content h2,
+          .article-content h3,
+          .article-content h4,
+          .article-content h5,
+          .article-content h6 {
+            text-align: left;
+            text-align-last: left;
+          }
+
+          /*
+           * Daftar lebih nyaman menggunakan
+           * rata kiri.
+           */
+          .article-content ul,
+          .article-content ol,
+          .article-content li {
+            text-align: left;
+            text-align-last: left;
+          }
+
+          /*
+           * Mencegah gambar artikel keluar
+           * dari lebar kontainer.
+           */
+          .article-content img {
+            max-width: 100%;
+            height: auto;
+          }
+
+          /*
+           * Tampilan scrollbar popup.
+           */
+          .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+          }
+
+          .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f5f5f5;
+          }
+
+          .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #b8b8b8;
+            border-radius: 9999px;
+          }
+
+          .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #888888;
+          }
+        `}</style>
       </div>
     </div>
   );
